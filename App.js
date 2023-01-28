@@ -9,7 +9,7 @@ import {
   TextInput,
   SafeAreaView,
 } from "react-native";
-// import MedInput from "./components/MedInput";
+import MedInput from "./components/MedInput";
 
 export default function App() {
   const [medicationsArray, setMedicationsArray] = useState([]);
@@ -48,25 +48,29 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
       <View style={styles.inputContainer}>
-        <TextInput
-          placeholder={"Medication Name"}
-          value={medName}
-          onChangeText={handleStateChange.bind(this, "1")}
+        <MedInput
+          placeholder={"Medicine Name"}
+          handleChange={handleStateChange}
+          id={"1"}
+          state={medName}
         />
-        <TextInput
-          placeholder={"Medication Frequency"}
-          value={medFrequency}
-          onChangeText={handleStateChange.bind(this, "2")}
+        <MedInput
+          placeholder={"Medicine Frequency"}
+          handleChange={handleStateChange}
+          id={"2"}
+          state={medFrequency}
         />
-        <TextInput
-          placeholder={"Medication Dose"}
-          value={medDose}
-          onChangeText={handleStateChange.bind(this, "3")}
+        <MedInput
+          placeholder={"Medicine Dose"}
+          handleChange={handleStateChange}
+          id={"3"}
+          state={medDose}
         />
-        <TextInput
-          placeholder={"Medication Time"}
-          value={medTime}
-          onChangeText={handleStateChange.bind(this, "4")}
+        <MedInput
+          placeholder={"Medicine Time"}
+          handleChange={handleStateChange}
+          id={"4"}
+          state={medTime}
         />
       </View>
 
