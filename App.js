@@ -10,6 +10,8 @@ import {
   SafeAreaView,
 } from "react-native";
 import MedInput from "./components/MedInput";
+import Medication from "./components/Medication";
+import EditMedication from "./components/EditMedication";
 
 export default function App() {
   const [medicationsArray, setMedicationsArray] = useState([]);
@@ -17,7 +19,8 @@ export default function App() {
   const [medFrequency, setMedFrequency] = useState("");
   const [medDose, setMedDose] = useState("");
   const [medTime, setMedTime] = useState("");
-
+  const [isModalActive, setIsModalActive] = useState(false);
+  const [chosenMed, setChosenMed] = useState({});
   function addMedsHandler() {
     setMedicationsArray((currentMedicationsArray) => [
       {
@@ -29,6 +32,7 @@ export default function App() {
       },
       ...currentMedicationsArray,
     ]);
+    //need to reset the input field.
   }
 
   function handleStateChange(id, text) {
@@ -43,7 +47,48 @@ export default function App() {
     }
   }
 
-  console.log(medName, medFrequency, medDose, medTime);
+  function deleteMedItem(id) {
+    setMedicationsArray((currentMedsArray) => {
+      return currentMedsArray.filter((med) => med.id !== id);
+    });
+  }
+
+  function updateMedication(id) {
+    //const medication = deleteMedItem(id);
+    //setMedicationsArray(...)
+
+    setMedicationsArray((currentMedsArray) => {
+      let arr = currentMedsArray.map((med) => med.id !== id);
+
+      arr.push({
+        name: "",
+        id: "",
+        frequency: "",
+        dosage: "",
+        time: "",
+      });
+      return arr;
+    });
+  }
+
+  function toggleModal(id) {
+    setIsModalActive((prevState) => !prevState);
+    setChosenMed(medicationsArray.find((med) => med.id === id));
+    console.log("The value of chosenMed: " + chosenMed.name);
+  }
+  let modal;
+
+  if (isModalActive) {
+    modal = (
+      <EditMedication
+        onCancel={toggleModal}
+        medInfo={chosenMed}
+        updateStateChange={handleStateChange}
+      />
+    );
+  }
+
+  console.log(isModalActive);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
@@ -79,9 +124,11 @@ export default function App() {
         <FlatList
           data={medicationsArray}
           renderItem={({ item }) => (
-            <Text>
-              {item.name},{item.id},{item.dosage},{item.time}
-            </Text>
+            <Medication
+              medInfo={item}
+              handleDelete={deleteMedItem}
+              handleToggle={toggleModal}
+            />
           )}
           keyExtractor={(item) => item.id}
         />
