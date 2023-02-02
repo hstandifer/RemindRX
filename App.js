@@ -32,7 +32,10 @@ export default function App() {
       },
       ...currentMedicationsArray,
     ]);
-    //need to reset the input field.
+    setMedName("");
+    setMedFrequency("");
+    setMedDose("");
+    setMedTime("");
   }
 
   function handleStateChange(id, text) {
@@ -53,45 +56,38 @@ export default function App() {
     });
   }
 
-  function updateMedication(id) {
-    //const medication = deleteMedItem(id);
-    //setMedicationsArray(...)
+  function updateMedication(id, name, freq, dose, time) {
+    deleteMedItem(id);
 
-    setMedicationsArray((currentMedsArray) => {
-      let arr = currentMedsArray.map((med) => med.id !== id);
-
-      arr.push({
-        name: "",
-        id: "",
-        frequency: "",
-        dosage: "",
-        time: "",
-      });
-      return arr;
-    });
+    setMedicationsArray((currentMedicationsArray) => [
+      {
+        name: name,
+        id: id,
+        frequency: freq,
+        dosage: dose,
+        time: time,
+      },
+      ...currentMedicationsArray,
+    ]);
+    setIsModalActive((prevState) => !prevState);
   }
 
   function toggleModal(id) {
     setIsModalActive((prevState) => !prevState);
     setChosenMed(medicationsArray.find((med) => med.id === id));
-    console.log("The value of chosenMed: " + chosenMed.name);
-  }
-  let modal;
-
-  if (isModalActive) {
-    modal = (
-      <EditMedication
-        onCancel={toggleModal}
-        medInfo={chosenMed}
-        updateStateChange={handleStateChange}
-      />
-    );
   }
 
   console.log(isModalActive);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
+      {isModalActive && (
+        <EditMedication
+          onCancel={toggleModal}
+          medInfo={chosenMed}
+          onSave={updateMedication}
+        />
+      )}
       <View style={styles.inputContainer}>
         <MedInput
           placeholder={"Medicine Name"}
