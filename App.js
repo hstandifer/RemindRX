@@ -18,7 +18,7 @@ export default function App() {
   const [medName, setMedName] = useState("");
   const [medFrequency, setMedFrequency] = useState("");
   const [medDose, setMedDose] = useState("");
-  const [medTime, setMedTime] = useState("");
+  const [medTime, setMedTime] = useState(new Date(1598051730000));
   const [isModalActive, setIsModalActive] = useState(false);
   const [chosenMed, setChosenMed] = useState({});
   function addMedsHandler() {
@@ -35,7 +35,6 @@ export default function App() {
     setMedName("");
     setMedFrequency("");
     setMedDose("");
-    setMedTime("");
   }
 
   function handleStateChange(id, text) {
@@ -45,16 +44,19 @@ export default function App() {
       setMedFrequency(text);
     } else if (id === "3") {
       setMedDose(text);
-    } else {
-      setMedTime(text);
     }
   }
+
+  // function handleTimeChange(time) {
+  //   setMedTime(time);
+  // }
 
   function deleteMedItem(id) {
     setMedicationsArray((currentMedsArray) => {
       return currentMedsArray.filter((med) => med.id !== id);
     });
   }
+
 
   function updateMedication(id, name, freq, dose, time) {
     deleteMedItem(id);
@@ -107,14 +109,8 @@ export default function App() {
           id={"3"}
           state={medDose}
         />
-        <MedInput
-          placeholder={"Medicine Time"}
-          handleChange={handleStateChange}
-          id={"4"}
-          state={medTime}
-        />
       </View>
-
+        {/* <Test timeStateValue={medTime}updateTimeChange={handleTimeChange}/> */}
       <Button title="Add Med" onPress={addMedsHandler} />
       <View style={styles.medContainer}>
         <FlatList

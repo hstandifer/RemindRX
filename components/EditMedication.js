@@ -1,5 +1,6 @@
 import { StyleSheet, View, TextInput, Button, Modal, Text } from "react-native";
 import { useState } from "react";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function EditMedication({
   onCancel,
@@ -21,9 +22,13 @@ export default function EditMedication({
   function handleMedDoseStateChange(text) {
     setMedDose(text);
   }
-  function handleMedTimeStateChange(text) {
-    setMedTime(text);
-  }
+  // function handleMedTimeStateChange(text) {
+  //   setMedTime(text);
+  // }
+  const handleMedTimeStateChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setMedTime(currentDate);
+  };
 
   function update(){
     onSave(medId, medName, medFrequency, medDose, medTime)
@@ -49,10 +54,12 @@ export default function EditMedication({
             defaultValue={medInfo.dosage}
             onChangeText={handleMedDoseStateChange}
           />
-          <TextInput
-            placeholder={"med time"}
-            defaultValue={medInfo.time}
-            onChangeText={handleMedTimeStateChange}
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={medInfo.time}
+            mode='time'
+            is24Hour={true}
+            onChange={handleMedTimeStateChange}
           />
         </View>
 
