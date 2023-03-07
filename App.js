@@ -9,15 +9,17 @@ import {
   TextInput,
   SafeAreaView,
 } from "react-native";
-// import MedInput from "./components/MedInput";
+import MedInput from "./components/MedInput";
+import Medication from "./components/Medication";
+import EditMedication from "./components/EditMedication";
 
 export default function App() {
   const [medicationsArray, setMedicationsArray] = useState([]);
   const [medName, setMedName] = useState("");
   const [medFrequency, setMedFrequency] = useState("");
   const [medDose, setMedDose] = useState("");
-  const [medTime, setMedTime] = useState("");
-
+  const [isModalActive, setIsModalActive] = useState(false);
+  const [chosenMed, setChosenMed] = useState({});
   function addMedsHandler() {
     setMedicationsArray((currentMedicationsArray) => [
       {
@@ -25,10 +27,12 @@ export default function App() {
         id: Math.random().toString(),
         frequency: medFrequency,
         dosage: medDose,
-        time: medTime,
       },
       ...currentMedicationsArray,
     ]);
+    setMedName("");
+    setMedFrequency("");
+    setMedDose("");
   }
 
   function handleStateChange(id, text) {
@@ -38,46 +42,81 @@ export default function App() {
       setMedFrequency(text);
     } else if (id === "3") {
       setMedDose(text);
-    } else {
-      setMedTime(text);
     }
   }
 
-  console.log(medName, medFrequency, medDose, medTime);
+  // function handleTimeChange(time) {
+  //   setMedTime(time);
+  // }
+
+  function deleteMedItem(id) {
+    setMedicationsArray((currentMedsArray) => {
+      return currentMedsArray.filter((med) => med.id !== id);
+    });
+  }
+
+  function updateMedication(id, name, freq, dose) {
+    deleteMedItem(id);
+
+    setMedicationsArray((currentMedicationsArray) => [
+      {
+        name: name,
+        id: id,
+        frequency: freq,
+        dosage: dose,
+      },
+      ...currentMedicationsArray,
+    ]);
+    setIsModalActive((prevState) => !prevState);
+  }
+
+  function toggleModal(id) {
+    setIsModalActive((prevState) => !prevState);
+    setChosenMed(medicationsArray.find((med) => med.id === id));
+  }
+
+  console.log(isModalActive);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
+      {isModalActive && (
+        <EditMedication
+          onCancel={toggleModal}
+          medInfo={chosenMed}
+          onSave={updateMedication}
+        />
+      )}
       <View style={styles.inputContainer}>
-        <TextInput
-          placeholder={"Medication Name"}
-          value={medName}
-          onChangeText={handleStateChange.bind(this, "1")}
+        <MedInput
+          placeholder={"Medicine Name"}
+          handleChange={handleStateChange}
+          id={"1"}
+          state={medName}
         />
-        <TextInput
-          placeholder={"Medication Frequency"}
-          value={medFrequency}
-          onChangeText={handleStateChange.bind(this, "2")}
+        <MedInput
+          placeholder={"Medicine Frequency"}
+          handleChange={handleStateChange}
+          id={"2"}
+          state={medFrequency}
         />
-        <TextInput
-          placeholder={"Medication Dose"}
-          value={medDose}
-          onChangeText={handleStateChange.bind(this, "3")}
-        />
-        <TextInput
-          placeholder={"Medication Time"}
-          value={medTime}
-          onChangeText={handleStateChange.bind(this, "4")}
+        <MedInput
+          placeholder={"Medicine Dose"}
+          handleChange={handleStateChange}
+          id={"3"}
+          state={medDose}
         />
       </View>
-
+      {/* <Test timeStateValue={medTime}updateTimeChange={handleTimeChange}/> */}
       <Button title="Add Med" onPress={addMedsHandler} />
       <View style={styles.medContainer}>
         <FlatList
           data={medicationsArray}
           renderItem={({ item }) => (
-            <Text>
-              {item.name},{item.id},{item.dosage},{item.time}
-            </Text>
+            <Medication
+              medInfo={item}
+              handleDelete={deleteMedItem}
+              handleToggle={toggleModal}
+            />
           )}
           keyExtractor={(item) => item.id}
         />
@@ -91,7 +130,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 50,
   },
   inputContainer: {
     backgroundColor: "red",
