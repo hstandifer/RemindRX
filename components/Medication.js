@@ -6,9 +6,7 @@ export default function Medication({ handleDelete, handleToggle, medInfo }) {
       <Pressable onPress={handleDelete.bind(this, medInfo.id)}>
         <View style={styles.itemContainer}>
           <Text style={styles.medItem}>
-            {medInfo.name},{medInfo.dosage},
-            {medInfo.frequency},{medInfo.time.toLocaleTimeString()}
-
+            {medInfo.name},{medInfo.dosage},{medInfo.frequency},
           </Text>
         </View>
       </Pressable>

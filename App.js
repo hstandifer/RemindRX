@@ -18,7 +18,6 @@ export default function App() {
   const [medName, setMedName] = useState("");
   const [medFrequency, setMedFrequency] = useState("");
   const [medDose, setMedDose] = useState("");
-  const [medTime, setMedTime] = useState(new Date(1598051730000));
   const [isModalActive, setIsModalActive] = useState(false);
   const [chosenMed, setChosenMed] = useState({});
   function addMedsHandler() {
@@ -28,7 +27,6 @@ export default function App() {
         id: Math.random().toString(),
         frequency: medFrequency,
         dosage: medDose,
-        time: medTime,
       },
       ...currentMedicationsArray,
     ]);
@@ -57,8 +55,7 @@ export default function App() {
     });
   }
 
-
-  function updateMedication(id, name, freq, dose, time) {
+  function updateMedication(id, name, freq, dose) {
     deleteMedItem(id);
 
     setMedicationsArray((currentMedicationsArray) => [
@@ -67,7 +64,6 @@ export default function App() {
         id: id,
         frequency: freq,
         dosage: dose,
-        time: time,
       },
       ...currentMedicationsArray,
     ]);
@@ -110,7 +106,7 @@ export default function App() {
           state={medDose}
         />
       </View>
-        {/* <Test timeStateValue={medTime}updateTimeChange={handleTimeChange}/> */}
+      {/* <Test timeStateValue={medTime}updateTimeChange={handleTimeChange}/> */}
       <Button title="Add Med" onPress={addMedsHandler} />
       <View style={styles.medContainer}>
         <FlatList
@@ -134,7 +130,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 50,
   },
   inputContainer: {
     backgroundColor: "red",
