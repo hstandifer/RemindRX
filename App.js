@@ -9,134 +9,41 @@ import {
   TextInput,
   SafeAreaView,
 } from "react-native";
-import MedInput from "./components/MedInput";
-import Medication from "./components/Medication";
-import EditMedication from "./components/EditMedication";
-
+import HomeScreen from "./screens/Homescreen";
+import ManageScreen from "./screens/ManageScreen";
+import AccountScreen from "./screens/AccountScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 export default function App() {
-  const [medicationsArray, setMedicationsArray] = useState([]);
-  const [medName, setMedName] = useState("");
-  const [medFrequency, setMedFrequency] = useState("");
-  const [medDose, setMedDose] = useState("");
-  const [isModalActive, setIsModalActive] = useState(false);
-  const [chosenMed, setChosenMed] = useState({});
-  function addMedsHandler() {
-    setMedicationsArray((currentMedicationsArray) => [
-      {
-        name: medName,
-        id: Math.random().toString(),
-        frequency: medFrequency,
-        dosage: medDose,
-      },
-      ...currentMedicationsArray,
-    ]);
-    setMedName("");
-    setMedFrequency("");
-    setMedDose("");
-  }
-
-  function handleStateChange(id, text) {
-    if (id === "1") {
-      setMedName(text);
-    } else if (id === "2") {
-      setMedFrequency(text);
-    } else if (id === "3") {
-      setMedDose(text);
-    }
-  }
-
-  // function handleTimeChange(time) {
-  //   setMedTime(time);
-  // }
-
-  function deleteMedItem(id) {
-    setMedicationsArray((currentMedsArray) => {
-      return currentMedsArray.filter((med) => med.id !== id);
-    });
-  }
-
-  function updateMedication(id, name, freq, dose) {
-    deleteMedItem(id);
-
-    setMedicationsArray((currentMedicationsArray) => [
-      {
-        name: name,
-        id: id,
-        frequency: freq,
-        dosage: dose,
-      },
-      ...currentMedicationsArray,
-    ]);
-    setIsModalActive((prevState) => !prevState);
-  }
-
-  function toggleModal(id) {
-    setIsModalActive((prevState) => !prevState);
-    setChosenMed(medicationsArray.find((med) => med.id === id));
-  }
-
-  console.log(isModalActive);
+  const Tab = createBottomTabNavigator();
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="auto" />
-      {isModalActive && (
-        <EditMedication
-          onCancel={toggleModal}
-          medInfo={chosenMed}
-          onSave={updateMedication}
-        />
-      )}
-      <View style={styles.inputContainer}>
-        <MedInput
-          placeholder={"Medicine Name"}
-          handleChange={handleStateChange}
-          id={"1"}
-          state={medName}
-        />
-        <MedInput
-          placeholder={"Medicine Frequency"}
-          handleChange={handleStateChange}
-          id={"2"}
-          state={medFrequency}
-        />
-        <MedInput
-          placeholder={"Medicine Dose"}
-          handleChange={handleStateChange}
-          id={"3"}
-          state={medDose}
-        />
-      </View>
-      {/* <Test timeStateValue={medTime}updateTimeChange={handleTimeChange}/> */}
-      <Button title="Add Med" onPress={addMedsHandler} />
-      <View style={styles.medContainer}>
-        <FlatList
-          data={medicationsArray}
-          renderItem={({ item }) => (
-            <Medication
-              medInfo={item}
-              handleDelete={deleteMedItem}
-              handleToggle={toggleModal}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-        />
-      </View>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, size, color }) => {
+            let iconName;
+            if (route.name === "Home") {
+              iconName = "home";
+              size = focused ? 25 : 20;
+              color = focused ? "blue" : "black";
+            } else if (route.name === "Manage") {
+              iconName = "medkit";
+              size = focused ? 25 : 20;
+              color = focused ? "blue" : "black";
+            } else if (route.name === "Account") {
+              iconName = "user-circle";
+              size = focused ? 25 : 20;
+              color = focused ? "blue" : "black";
+            }
+            return <FontAwesome5 name={iconName} size={size} />;
+          },
+        })}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Manage" component={ManageScreen} />
+        <Tab.Screen name="Account" component={AccountScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    marginTop: 50,
-  },
-  inputContainer: {
-    backgroundColor: "red",
-  },
-  medContainer: {
-    backgroundColor: "yellow",
-    color: "white",
-  },
-});

@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, ScrollView, Button, StyleSheet } from 'react-native';
-
+import React from "react";
+import { View, Text, ScrollView, Button, StyleSheet } from "react-native";
+import MedList from "../components/MedList";
 export default function Homepage() {
   return (
     <View style={styles.HomepageContainer}>
@@ -11,11 +11,8 @@ export default function Homepage() {
 
       <ScrollView style={styles.listContainer}>
         <Text>MEDICINE BOX</Text>
+        <MedList />
       </ScrollView>
-
-      <View style={styles.navContainer}>
-        <Text style={{ color: 'black' }}>Navbar Here</Text>
-      </View>
     </View>
   );
 }
@@ -23,31 +20,23 @@ export default function Homepage() {
 const styles = StyleSheet.create({
   HomepageContainer: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     // backgroundColor: 'pink',
     padding: 10,
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
   },
   title: {
     fontSize: 50,
   },
   sortContainer: {
-    flexDirection: 'row',
-    width: '100%',
+    flexDirection: "row",
+    width: "100%",
     // backgroundColor: 'white',
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   listContainer: {
     // backgroundColor: 'limegreen',
-    width: '100%',
+    width: "100%",
     borderWidth: 2,
-  },
-  navContainer: {
-    heigth: 100,
-    padding: 50,
-    width: '100%',
-    // backgroundColor: 'blue',
-    borderWidth: 2,
-    marginVertical: 40,
   },
 });
