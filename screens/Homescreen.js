@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, ScrollView, Button, StyleSheet } from "react-native";
+import AddMedsButton from "../components/AddMedsButton";
 import MedList from "../components/MedList";
+
 export default function Homepage() {
   return (
     <View style={styles.HomepageContainer}>
@@ -11,7 +13,9 @@ export default function Homepage() {
 
       <ScrollView style={styles.listContainer}>
         <Text>MEDICINE BOX</Text>
-        <MedList />
+        <View>
+          <MedList />
+        </View>
       </ScrollView>
     </View>
   );
@@ -38,5 +42,20 @@ const styles = StyleSheet.create({
     // backgroundColor: 'limegreen',
     width: "100%",
     borderWidth: 2,
+  },
+  itemContainer: {
+    margin: 5,
+    borderRadius: 8,
+    height: 150,
+    width: 150,
+    backgroundColor: "purple",
+  },
+  medItem: {
+    color: "white",
+    padding: 5,
+  },
+  medContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
 });

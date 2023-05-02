@@ -12,6 +12,8 @@ import {
 import MedInput from "./MedInput";
 import Medication from "./Medication";
 import EditMedication from "./EditMedication";
+import AddMedsButton from "./AddMedsButton";
+import AddMedications from "./AddMedicationsScreen";
 
 export default function MedList() {
   const [medicationsArray, setMedicationsArray] = useState([]);
@@ -19,6 +21,7 @@ export default function MedList() {
   const [medFrequency, setMedFrequency] = useState("");
   const [medDose, setMedDose] = useState("");
   const [isModalActive, setIsModalActive] = useState(false);
+  const [isAddModalActive, setIsAddModalActive] = useState(false);
   const [chosenMed, setChosenMed] = useState({});
   function addMedsHandler() {
     setMedicationsArray((currentMedicationsArray) => [
@@ -75,7 +78,12 @@ export default function MedList() {
     setChosenMed(medicationsArray.find((med) => med.id === id));
   }
 
-  console.log(isModalActive);
+  function toggleAddModal() {
+    setIsAddModalActive(!isAddModalActive);
+  }
+
+  //console.log(isModalActive);
+  console.log(isAddModalActive);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
@@ -86,6 +94,7 @@ export default function MedList() {
           onSave={updateMedication}
         />
       )}
+      {isAddModalActive && <AddMedications onCancel={toggleAddModal} />}
       <View style={styles.inputContainer}>
         <MedInput
           placeholder={"Medicine Name"}
@@ -109,15 +118,19 @@ export default function MedList() {
       {/* <Test timeStateValue={medTime}updateTimeChange={handleTimeChange}/> */}
       <Button title="Add Med" onPress={addMedsHandler} />
       <View style={styles.medContainer}>
+        <AddMedsButton handleToggleAdd={toggleAddModal} />
         <FlatList
           data={medicationsArray}
           renderItem={({ item }) => (
-            <Medication
-              medInfo={item}
-              handleDelete={deleteMedItem}
-              handleToggle={toggleModal}
-            />
+            <>
+              <Medication
+                medInfo={item}
+                handleDelete={deleteMedItem}
+                handleToggle={toggleModal}
+              />
+            </>
           )}
+          numColumns={2}
           keyExtractor={(item) => item.id}
         />
       </View>
