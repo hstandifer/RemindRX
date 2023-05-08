@@ -9,8 +9,11 @@ export default function Medication({ handleDelete, handleToggle, medInfo }) {
             {medInfo.name},{medInfo.dosage},{medInfo.frequency},
           </Text>
         </View>
+        <Button
+          title="Edit Med"
+          onPress={handleToggle.bind(this, medInfo.id)}
+        />
       </Pressable>
-      <Button title="Edit Med" onPress={handleToggle.bind(this, medInfo.id)} />
     </View>
   );
 }
@@ -19,6 +22,8 @@ const styles = StyleSheet.create({
   itemContainer: {
     margin: 5,
     borderRadius: 8,
+    height: 150,
+    width: 150,
     backgroundColor: "purple",
   },
   medItem: {
@@ -27,5 +32,6 @@ const styles = StyleSheet.create({
   },
   medContainer: {
     flexDirection: "row",
+    flexWrap: "wrap",
   },
 });
