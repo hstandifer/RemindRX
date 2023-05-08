@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Modal, Button } from "react-native";
 import MedInput from "./MedInput";
@@ -7,6 +8,24 @@ export default function AddMedications({ onCancel }) {
   const [medName, setMedName] = useState("");
   const [medFrequency, setMedFrequency] = useState("");
   const [medDose, setMedDose] = useState("");
+
+  const setMedList = async () => {
+    try {
+      // AsyncStorage.setItem("medications", JSON.stringify(medicationsArray));
+      AsyncStorage.setItem("medications", JSON.stringify(medicationsArray));
+      const value = await AsyncStorage.getItem("medications");
+
+      console.log("Value: " + value);
+    } catch (error) {
+      console.log(`Error: ${error}`);
+    }
+  };
+
+  function print() {
+    for (let item in medicationsArray) {
+      console.log(item.name);
+    }
+  }
 
   function addMedsHandler() {
     setMedicationsArray((currentMedicationsArray) => [
@@ -23,6 +42,8 @@ export default function AddMedications({ onCancel }) {
     setMedName("");
     setMedFrequency("");
     setMedDose("");
+    setMedList();
+    print();
     onCancel();
   }
 
@@ -35,10 +56,6 @@ export default function AddMedications({ onCancel }) {
       setMedDose(text);
     }
   }
-
-  // function handleTimeChange(time) {
-  //   setMedTime(time);
-  // }
 
   return (
     <Modal animationType="slide">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
@@ -13,11 +13,16 @@ import Medication from "./Medication";
 import AddMedsButton from "./AddMedsButton";
 import AddMedications from "./AddMedicationsModal";
 import EditMedication from "./EditMedication";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function MedList({ medicationsArray }) {
+export default function MedList() {
   const [isModalActive, setIsModalActive] = useState(false);
   const [isAddModalActive, setIsAddModalActive] = useState(false);
+  const [medicationsArray, setMedicationsArray] = useState([]);
 
+  useEffect(() => {
+    getMedList();
+  }, [getMedList]);
   function toggleModal(id) {
     setIsModalActive((prevState) => !prevState);
     setChosenMed(medicationsArray.find((med) => med.id === id));
@@ -26,6 +31,18 @@ export default function MedList({ medicationsArray }) {
   function toggleAddModal() {
     setIsAddModalActive(!isAddModalActive);
   }
+
+  const getMedList = () => {
+    try {
+      AsyncStorage.getItem("medications").then((value) => {
+        if (value != null) {
+          console.log("Valueuiuio: " + JSON.parse(value));
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View style={styles.medContainer}>
