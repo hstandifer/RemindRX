@@ -9,7 +9,7 @@ import {
   TextInput,
   SafeAreaView,
 } from "react-native";
-import HomeScreen from "./screens/Homescreen";
+import HomeScreen from "./screens/HomeScreen";
 import ManageScreen from "./screens/ManageScreen";
 import AccountScreen from "./screens/AccountScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -17,7 +17,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import AddMedicationsScreen from "./components/AddMedicationsScreen";
+import AddMedicationsScreen from "./components/AddMedicationsModal";
 
 function AccountStack() {
   return (

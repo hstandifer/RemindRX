@@ -21,6 +21,27 @@ export default function EditMedication({ onCancel, medInfo, onSave }) {
     onSave(medId, medName, medFrequency, medDose);
   }
 
+  function deleteMedItem(id) {
+    setMedicationsArray((currentMedsArray) => {
+      return currentMedsArray.filter((med) => med.id !== id);
+    });
+  }
+
+  function updateMedication(id, name, freq, dose) {
+    deleteMedItem(id);
+
+    setMedicationsArray((currentMedicationsArray) => [
+      {
+        name: name,
+        id: id,
+        frequency: freq,
+        dosage: dose,
+      },
+      ...currentMedicationsArray,
+    ]);
+    setIsModalActive((prevState) => !prevState);
+  }
+
   return (
     <Modal animationType="slide">
       <View style={styles.container}>

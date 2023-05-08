@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Button, StyleSheet } from "react-native";
 import AddMedsButton from "../components/AddMedsButton";
 import MedList from "../components/MedList";
 
-export default function Homepage() {
+export default function Homepage({ medicationsArray }) {
   return (
     <View style={styles.HomepageContainer}>
       <Text style={styles.title}>Medications</Text>

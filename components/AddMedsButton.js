@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, Pressable, View, useState } from "react-native";
+import { StyleSheet, Text, Pressable, View } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 export default function AddMedsButton({ handleToggleAdd }) {
