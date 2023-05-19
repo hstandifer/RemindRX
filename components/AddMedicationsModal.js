@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Modal, Button } from "react-native";
+import { View, Text, StyleSheet, Modal, Button, Platform } from "react-native";
 import MedInput from "./MedInput";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 
@@ -15,8 +15,23 @@ export default function AddMedicationsModal({ onClose, onAddMedication }) {
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setNewTime(currentDate);
-    setIsTimePickerVisible(false);
+    if(Platform.OS == 'android'){
+      setIsTimePickerVisible(false);
+    }
   };
+
+  function formatTime() {
+    const hours = newTime.getHours();
+    const minutes = newTime.getMinutes();
+
+    const amOrPm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+    const formattedTime = `${formattedHours}:${
+      minutes < 9 ? '0' + minutes : minutes
+    } ${amOrPm}`;
+
+    return formattedTime;
+  }
 
   const handleAddMedication = () => {
     if (
@@ -25,12 +40,14 @@ export default function AddMedicationsModal({ onClose, onAddMedication }) {
       newFrequency.trim() !== "" &&
       newTime !== null
     ) {
+      const formattedTime = formatTime()
+
       const newMedicationObject = {
         id: Math.random().toString(),
         name: newMedication,
         dose: newDose,
         frequency: newFrequency,
-        time: newTime,
+        time: formattedTime,
       };
 
       onAddMedication(newMedicationObject);
@@ -83,7 +100,7 @@ export default function AddMedicationsModal({ onClose, onAddMedication }) {
             id={"3"}
             state={newDose}
           />
-          <Text>Time: {newTime.toLocaleString()}</Text>
+          <Text>Time: {formatTime()}</Text>
 
           <Button onPress={showTimepicker} title="Show time picker!" />
         </View>
@@ -91,10 +108,10 @@ export default function AddMedicationsModal({ onClose, onAddMedication }) {
         {isTimePickerVisible ? (
           <RNDateTimePicker
             testID="dateTimePicker"
-            display="clock"
+            display="default"
             value={newTime}
             mode="time"
-            //is24Hour={true}
+            is24Hour={false}
             onChange={onChange}
             //onCancel={setIsTimePickerVisible(!isTimePickerVisible)}
           />
