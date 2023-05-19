@@ -6,8 +6,8 @@ export default function Medication({ medInfo }) {
       <Pressable>
         <View style={styles.itemContainer}>
           <Text style={styles.medItem}>
-            {medInfo.name},{medInfo.dosage},{medInfo.frequency},
-            {medInfo.newTime}
+            {medInfo.name},{medInfo.dose},{medInfo.frequency},
+            {medInfo.time}
           </Text>
         </View>
       </Pressable>
