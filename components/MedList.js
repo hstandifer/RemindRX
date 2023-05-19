@@ -11,58 +11,86 @@ import {
 } from "react-native";
 import Medication from "./Medication";
 import AddMedsButton from "./AddMedsButton";
-import AddMedications from "./AddMedicationsModal";
 import EditMedication from "./EditMedication";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AddMedicationsModal from "./AddMedicationsModal";
 
 export default function MedList() {
-  const [isModalActive, setIsModalActive] = useState(false);
-  const [isAddModalActive, setIsAddModalActive] = useState(false);
-  const [medicationsArray, setMedicationsArray] = useState([]);
+  const [medications, setMedications] = useState([]);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
 
   useEffect(() => {
-    getMedList();
-  }, [getMedList]);
-  function toggleModal(id) {
-    setIsModalActive((prevState) => !prevState);
-    setChosenMed(medicationsArray.find((med) => med.id === id));
-  }
+    loadMedications();
+  }, []);
 
-  function toggleAddModal() {
-    setIsAddModalActive(!isAddModalActive);
-  }
-
-  const getMedList = () => {
+  // load medications from localStorage
+  const loadMedications = async () => {
     try {
-      AsyncStorage.getItem("medications").then((value) => {
-        if (value != null) {
-          console.log("Valueuiuio: " + JSON.parse(value));
-        }
-      });
+      const storedMedications = await AsyncStorage.getItem("medications");
+      if (storedMedications !== null) {
+        setMedications(JSON.parse(storedMedications));
+      }
     } catch (error) {
-      console.log(error);
+      console.log("Error loading medications:", error);
     }
   };
+
+  function toggleAddModal() {
+    setIsAddModalVisible((prevState) => !prevState);
+  }
+  // function toggleModal(id) {
+  //   setIsModalActive((prevState) => !prevState);
+  //   setChosenMed(medicationsArray.find((med) => med.id === id));
+  // }
+
+  // adds medications to AsyncStorage and state
+  const handleAddMedication = async (newMedication) => {
+    const updatedMedications = [...medications, newMedication];
+    setMedications(updatedMedications);
+
+    try {
+      await AsyncStorage.setItem(
+        "medications",
+        JSON.stringify(updatedMedications)
+      );
+    } catch (error) {
+      console.log("Error saving medications:", error);
+    }
+  };
+
+  // temp delete localStorage
+  function clearStorage() {
+    AsyncStorage.clear();
+    setMedications([]);
+  }
 
   return (
     <View style={styles.medContainer}>
       <AddMedsButton handleToggleAdd={toggleAddModal} />
-      {isModalActive && (
+
+      {/* to be refactored */}
+      {/* {isModalActive && (
         <EditMedication
           onCancel={toggleModal}
           medInfo={chosenMed}
           onSave={updateMedication}
         />
+      )} */}
+      {isAddModalVisible && (
+        <AddMedicationsModal
+          onClose={toggleAddModal}
+          onAddMedication={handleAddMedication}
+        />
       )}
-      {isAddModalActive && <AddMedications onCancel={toggleAddModal} />}
+
       <FlatList
-        data={medicationsArray}
+        data={medications}
         renderItem={({ item }) => (
           <>
             <Medication
               medInfo={item}
-              handleDelete={deleteMedItem}
-              handleToggle={toggleModal}
+              // handleDelete={deleteMedItem}
+              // handleToggle={toggleModal}
             />
           </>
         )}

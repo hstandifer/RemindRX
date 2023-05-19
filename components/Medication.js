@@ -1,18 +1,15 @@
 import { Pressable, View, Text, StyleSheet, Button } from "react-native";
 
-export default function Medication({ handleDelete, handleToggle, medInfo }) {
+export default function Medication({ medInfo }) {
   return (
     <View style={styles.medContainer}>
-      <Pressable onPress={handleDelete.bind(this, medInfo.id)}>
+      <Pressable>
         <View style={styles.itemContainer}>
           <Text style={styles.medItem}>
             {medInfo.name},{medInfo.dosage},{medInfo.frequency},
+            {medInfo.newTime}
           </Text>
         </View>
-        <Button
-          title="Edit Med"
-          onPress={handleToggle.bind(this, medInfo.id)}
-        />
       </Pressable>
     </View>
   );
