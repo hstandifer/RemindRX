@@ -97,6 +97,7 @@ export default function MedList() {
         numColumns={2}
         keyExtractor={(item) => item.id}
       />
+    <View><Button  onPress={clearStorage} title='clear async storage'/></View>
     </View>
   );
 }
