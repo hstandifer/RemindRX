@@ -12,9 +12,11 @@ export default function Medication({ medInfo }) {
             <Text style={styles.medItem}>{medInfo.time}</Text>
           </View>
 
-          <Text style={[styles.medItem, styles.badge]}>
-            Pending
-          </Text>
+          <View style={styles.badge}>
+            <Text style={[styles.medItem]}>
+              Pending
+            </Text>
+          </View>
         </View>
       </Pressable>
     </View>
