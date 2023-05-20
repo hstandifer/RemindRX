@@ -109,11 +109,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 50,
   },
-  inputContainer: {
-    backgroundColor: "red",
-  },
   medContainer: {
-    backgroundColor: "yellow",
+    // backgroundColor: "yellow",
     color: "white",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
