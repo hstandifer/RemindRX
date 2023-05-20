@@ -96,6 +96,7 @@ export default function MedList() {
         )}
         numColumns={2}
         keyExtractor={(item) => item.id}
+        style={styles.flatList}
       />
     <View><Button  onPress={clearStorage} title='clear async storage'/></View>
     </View>
@@ -116,4 +117,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  flatList: {
+    height: 545,
+  }
 });
