@@ -2,17 +2,20 @@ import React from "react";
 import { View, Text, ScrollView, Button, StyleSheet } from "react-native";
 import AddMedsButton from "../components/AddMedsButton";
 import MedList from "../components/MedList";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Homepage({ medicationsArray }) {
   return (
-    <View style={styles.HomepageContainer}>
-      <Text style={styles.title}>Medications</Text>
-      
+    <SafeAreaView style={{height: "100%"}}>
+      <View style={styles.HomepageContainer}>
+        <Text style={styles.title}>RemindRX</Text>
+        
 
-      <ScrollView style={styles.listContainer}>
-          <MedList />
-      </ScrollView>
-    </View>
+        {/* <ScrollView style={styles.listContainer}> */}
+            <MedList />
+        {/* </ScrollView> */}
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -25,7 +28,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   title: {
-    fontSize: 50,
+    marginBottom: 15,
+    fontSize: 35,
   },
   listContainer: {
     // backgroundColor: 'limegreen',
