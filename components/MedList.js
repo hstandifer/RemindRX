@@ -64,6 +64,30 @@ export default function MedList() {
     setMedications([]);
   }
 
+  const saveMedications = async (updatedMedications) => {
+    try {
+      await AsyncStorage.setItem(
+        "medications",
+        JSON.stringify(updatedMedications)
+      );
+      setMedications(updatedMedications);
+    } catch (error) {
+      console.log("Error saving medications:", error);
+    }
+  };
+
+  const takeMedication = async (medicationId) => {
+    const updatedMedications = medications.map((medication) => {
+      if (medication.id === medicationId) {
+        console.log("medication taken");
+        return { ...medication, taken: true };
+      }
+      return medication;
+    });
+
+    await saveMedications(updatedMedications);
+  };
+
   return (
     <View style={styles.medContainer}>
       <AddMedsButton handleToggleAdd={toggleAddModal} />
@@ -89,6 +113,7 @@ export default function MedList() {
           <>
             <Medication
               medInfo={item}
+              takeMedication={takeMedication}
               // handleDelete={deleteMedItem}
               // handleToggle={toggleModal}
             />
@@ -98,7 +123,9 @@ export default function MedList() {
         keyExtractor={(item) => item.id}
         style={styles.flatList}
       />
-    <View><Button  onPress={clearStorage} title='clear async storage'/></View>
+      <View>
+        <Button onPress={clearStorage} title="clear async storage" />
+      </View>
     </View>
   );
 }
@@ -119,5 +146,5 @@ const styles = StyleSheet.create({
   },
   flatList: {
     height: 545,
-  }
+  },
 });

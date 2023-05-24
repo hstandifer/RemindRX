@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Modal, Button, Platform } from "react-native";
 import MedInput from "./MedInput";
@@ -9,13 +8,14 @@ export default function AddMedicationsModal({ onClose, onAddMedication }) {
   const [newDose, setNewDose] = useState("");
   const [newFrequency, setNewFrequency] = useState("");
   const [newTime, setNewTime] = useState(new Date(1598051730000));
+  const [isTaken, setIsTaken] = useState(false);
 
   const [isTimePickerVisible, setIsTimePickerVisible] = useState(false);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setNewTime(currentDate);
-    if(Platform.OS == 'android'){
+    if (Platform.OS == "android") {
       setIsTimePickerVisible(false);
     }
   };
@@ -24,10 +24,10 @@ export default function AddMedicationsModal({ onClose, onAddMedication }) {
     const hours = newTime.getHours();
     const minutes = newTime.getMinutes();
 
-    const amOrPm = hours >= 12 ? 'PM' : 'AM';
+    const amOrPm = hours >= 12 ? "PM" : "AM";
     const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
     const formattedTime = `${formattedHours}:${
-      minutes < 9 ? '0' + minutes : minutes
+      minutes < 9 ? "0" + minutes : minutes
     } ${amOrPm}`;
 
     return formattedTime;
@@ -40,7 +40,7 @@ export default function AddMedicationsModal({ onClose, onAddMedication }) {
       newFrequency.trim() !== "" &&
       newTime !== null
     ) {
-      const formattedTime = formatTime()
+      const formattedTime = formatTime();
 
       const newMedicationObject = {
         id: Math.random().toString(),
@@ -48,6 +48,7 @@ export default function AddMedicationsModal({ onClose, onAddMedication }) {
         dose: newDose,
         frequency: newFrequency,
         time: formattedTime,
+        taken: isTaken,
       };
 
       onAddMedication(newMedicationObject);

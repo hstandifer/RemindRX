@@ -1,11 +1,17 @@
-import { Pressable, View, Text, StyleSheet, Button } from "react-native";
+import { Pressable, View, Text, StyleSheet } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
-export default function Medication({ medInfo }) {
+export default function Medication({ medInfo, takeMedication }) {
+  const handlePress = () => {
+    if (!medInfo.isTaken) {
+      takeMedication(medInfo.id);
+    }
+  };
+
   return (
     <View style={styles.medContainer}>
-      <Pressable>
-        <View style={[styles.itemContainer]}>
+      <Pressable onPress={handlePress}>
+        <View style={[styles.itemContainer, medInfo.taken && styles.itemTaken]}>
           <Text style={[styles.medItem, styles.title]}>{medInfo.name}</Text>
           <View style={styles.timeContainer}>
             <FontAwesome5 name={"clock"} solid size={15} color={"black"} />
@@ -14,7 +20,10 @@ export default function Medication({ medInfo }) {
 
           <View style={styles.badge}>
             <Text style={[styles.medItem]}>
-              Pending
+              {medInfo.taken ? (
+                <FontAwesome5 name={"check"} solid size={15} color={"green"} />
+              ) : null}
+              {medInfo.taken ? <Text>Taken</Text> : <Text>Pending</Text>}
             </Text>
           </View>
         </View>
@@ -36,6 +45,9 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+  },
+  itemTaken: {
+    backgroundColor: "#d2f8d2",
   },
   // if the user missed to take a med, apply this style
   redBorder: {

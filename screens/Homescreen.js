@@ -1,19 +1,16 @@
 import React from "react";
-import { View, Text, ScrollView, Button, StyleSheet } from "react-native";
-import AddMedsButton from "../components/AddMedsButton";
+import { View, Text, StyleSheet } from "react-native";
+
 import MedList from "../components/MedList";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Homepage({ medicationsArray }) {
+export default function HomeScreen() {
   return (
-    <SafeAreaView style={{height: "100%"}}>
+    <SafeAreaView style={{ height: "100%" }}>
       <View style={styles.HomepageContainer}>
         <Text style={styles.title}>RemindRX</Text>
-        
 
-        {/* <ScrollView style={styles.listContainer}> */}
-            <MedList />
-        {/* </ScrollView> */}
+        <MedList />
       </View>
     </SafeAreaView>
   );
