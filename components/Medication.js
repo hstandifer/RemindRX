@@ -18,12 +18,12 @@ export default function Medication({ medInfo, takeMedication }) {
             <Text style={styles.medItem}>{medInfo.time}</Text>
           </View>
 
-          <View style={styles.badge}>
+          <View style={[styles.badge, medInfo.taken && styles.badgeGreen]}>
             <Text style={[styles.medItem]}>
               {medInfo.taken ? (
                 <FontAwesome5 name={"check"} solid size={15} color={"green"} />
               ) : null}
-              {medInfo.taken ? <Text>Taken</Text> : <Text>Pending</Text>}
+              {medInfo.taken ? <Text style={{color: "#117B34FF"}}> Taken</Text> : <Text>Pending</Text>}
             </Text>
           </View>
         </View>
