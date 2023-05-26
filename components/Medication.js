@@ -1,10 +1,25 @@
-import { Pressable, View, Text, StyleSheet } from "react-native";
+import { Pressable, View, Text, StyleSheet, Alert } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 export default function Medication({ medInfo, takeMedication }) {
   const handlePress = () => {
-    if (!medInfo.isTaken) {
-      takeMedication(medInfo.id);
+    if (!medInfo.taken) {
+      Alert.alert(
+        "Medication",
+        "\nDid you take your medication?\n",
+        [
+          {
+            text: "No",
+            style: 'cancel',
+          },
+          {
+            text: "Yes",
+            onPress: () => takeMedication(medInfo.id),
+            style: "default"
+          }
+        ],
+        "default"
+      );
     }
   };
 
