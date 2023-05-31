@@ -6,17 +6,17 @@ export default function Medication({ medInfo, takeMedication }) {
     if (!medInfo.taken) {
       Alert.alert(
         "Medication",
-        "\nDid you take your medication?\n",
+        "\nDid you take this medication?\n",
         [
           {
             text: "No",
-            style: 'cancel',
+            style: "cancel",
           },
           {
             text: "Yes",
             onPress: () => takeMedication(medInfo.id),
-            style: "default"
-          }
+            style: "default",
+          },
         ],
         "default"
       );
@@ -38,7 +38,11 @@ export default function Medication({ medInfo, takeMedication }) {
               {medInfo.taken ? (
                 <FontAwesome5 name={"check"} solid size={15} color={"green"} />
               ) : null}
-              {medInfo.taken ? <Text style={{color: "#117B34FF"}}> Taken</Text> : <Text>Pending</Text>}
+              {medInfo.taken ? (
+                <Text style={{ color: "#117B34FF" }}> Taken</Text>
+              ) : (
+                <Text>Pending</Text>
+              )}
             </Text>
           </View>
         </View>

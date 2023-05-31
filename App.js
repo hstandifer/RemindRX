@@ -1,15 +1,6 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  Button,
-  TextInput,
-  SafeAreaView,
-} from "react-native";
-import HomeScreen from "./screens/HomeScreen";
+import HomeScreen from "./screens/HomeScreen.js";
 import ManageScreen from "./screens/ManageScreen";
 import AccountScreen from "./screens/AccountScreen";
 import LoginScreen from "./screens/LoginScreen";
