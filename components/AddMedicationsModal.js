@@ -1,44 +1,81 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Modal, Button } from "react-native";
+import { View, Text, StyleSheet, Modal, Button, Platform } from "react-native";
 import MedInput from "./MedInput";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
-export default function AddMedications({ onCancel }) {
-  const [medicationsArray, setMedicationsArray] = useState([]);
-  const [medName, setMedName] = useState("");
-  const [medFrequency, setMedFrequency] = useState("");
-  const [medDose, setMedDose] = useState("");
+export default function AddMedicationsModal({ onClose, onAddMedication }) {
+  const [newMedication, setNewMedication] = useState("");
+  const [newDose, setNewDose] = useState("");
+  const [newFrequency, setNewFrequency] = useState("");
+  const [newTime, setNewTime] = useState(new Date(1598051730000));
+  const [isTaken, setIsTaken] = useState(false);
 
-  function addMedsHandler() {
-    setMedicationsArray((currentMedicationsArray) => [
-      {
-        name: medName,
-        id: Math.random().toString(),
-        frequency: medFrequency,
-        dosage: medDose,
-      },
-      ...currentMedicationsArray,
-    ]);
+  const [isTimePickerVisible, setIsTimePickerVisible] = useState(false);
 
-    // clear the input fields when a medication is added
-    setMedName("");
-    setMedFrequency("");
-    setMedDose("");
-    onCancel();
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setNewTime(currentDate);
+    if (Platform.OS == "android") {
+      setIsTimePickerVisible(false);
+    }
+  };
+
+  function formatTime() {
+    const hours = newTime.getHours();
+    const minutes = newTime.getMinutes();
+
+    const amOrPm = hours >= 12 ? "PM" : "AM";
+    const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+    const formattedTime = `${formattedHours}:${
+      minutes < 9 ? "0" + minutes : minutes
+    } ${amOrPm}`;
+
+    return formattedTime;
   }
+
+  const handleAddMedication = () => {
+    if (
+      newMedication.trim() !== "" &&
+      newDose.trim() !== "" &&
+      newFrequency.trim() !== "" &&
+      newTime !== null
+    ) {
+      const formattedTime = formatTime();
+
+      const newMedicationObject = {
+        id: Math.random().toString(),
+        name: newMedication,
+        dose: newDose,
+        frequency: newFrequency,
+        time: formattedTime,
+        taken: isTaken,
+      };
+
+      onAddMedication(newMedicationObject);
+
+      // reset fields
+      setNewMedication("");
+      setNewDose("");
+      setNewFrequency("");
+
+      // close modal
+      onClose();
+    }
+  };
 
   function handleStateChange(id, text) {
     if (id === "1") {
-      setMedName(text);
+      setNewMedication(text);
     } else if (id === "2") {
-      setMedFrequency(text);
+      setNewFrequency(text);
     } else if (id === "3") {
-      setMedDose(text);
+      setNewDose(text);
     }
   }
 
-  // function handleTimeChange(time) {
-  //   setMedTime(time);
-  // }
+  const showTimepicker = () => {
+    setIsTimePickerVisible(!isTimePickerVisible);
+  };
 
   return (
     <Modal animationType="slide">
@@ -50,26 +87,40 @@ export default function AddMedications({ onCancel }) {
             placeholder={"Medicine Name"}
             handleChange={handleStateChange}
             id={"1"}
-            state={medName}
+            state={newMedication}
           />
           <MedInput
             placeholder={"Medicine Frequency"}
             handleChange={handleStateChange}
             id={"2"}
-            state={medFrequency}
+            state={newFrequency}
           />
           <MedInput
             placeholder={"Medicine Dose"}
             handleChange={handleStateChange}
             id={"3"}
-            state={medDose}
+            state={newDose}
           />
+          <Text>Time: {formatTime()}</Text>
+
+          <Button onPress={showTimepicker} title="Show time picker!" />
         </View>
-        {/* <Test timeStateValue={medTime}updateTimeChange={handleTimeChange}/> */}
+
+        {isTimePickerVisible ? (
+          <RNDateTimePicker
+            testID="dateTimePicker"
+            display="default"
+            value={newTime}
+            mode="time"
+            is24Hour={false}
+            onChange={onChange}
+            //onCancel={setIsTimePickerVisible(!isTimePickerVisible)}
+          />
+        ) : null}
 
         <View style={styles.buttonContainer}>
-          <Button title="cancel" onPress={onCancel} />
-          <Button title="Add Med" onPress={addMedsHandler} />
+          <Button title="cancel" onPress={onClose} />
+          <Button title="Add Med" onPress={handleAddMedication} />
         </View>
       </View>
     </Modal>

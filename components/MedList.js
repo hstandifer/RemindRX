@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
@@ -11,47 +11,121 @@ import {
 } from "react-native";
 import Medication from "./Medication";
 import AddMedsButton from "./AddMedsButton";
-import AddMedications from "./AddMedicationsModal";
 import EditMedication from "./EditMedication";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import AddMedicationsModal from "./AddMedicationsModal";
 
-export default function MedList({ medicationsArray }) {
-  const [isModalActive, setIsModalActive] = useState(false);
-  const [isAddModalActive, setIsAddModalActive] = useState(false);
+export default function MedList() {
+  const [medications, setMedications] = useState([]);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
 
-  function toggleModal(id) {
-    setIsModalActive((prevState) => !prevState);
-    setChosenMed(medicationsArray.find((med) => med.id === id));
-  }
+  useEffect(() => {
+    loadMedications();
+  }, []);
+
+  // load medications from localStorage
+  const loadMedications = async () => {
+    try {
+      const storedMedications = await AsyncStorage.getItem("medications");
+      if (storedMedications !== null) {
+        setMedications(JSON.parse(storedMedications));
+      }
+    } catch (error) {
+      console.log("Error loading medications:", error);
+    }
+  };
 
   function toggleAddModal() {
-    setIsAddModalActive(!isAddModalActive);
+    setIsAddModalVisible((prevState) => !prevState);
   }
+  // function toggleModal(id) {
+  //   setIsModalActive((prevState) => !prevState);
+  //   setChosenMed(medicationsArray.find((med) => med.id === id));
+  // }
+
+  // adds medications to AsyncStorage and state
+  const handleAddMedication = async (newMedication) => {
+    const updatedMedications = [...medications, newMedication];
+    setMedications(updatedMedications);
+
+    try {
+      await AsyncStorage.setItem(
+        "medications",
+        JSON.stringify(updatedMedications)
+      );
+    } catch (error) {
+      console.log("Error saving medications:", error);
+    }
+  };
+
+  // temp delete localStorage
+  function clearStorage() {
+    AsyncStorage.clear();
+    setMedications([]);
+  }
+
+  const saveMedications = async (updatedMedications) => {
+    try {
+      await AsyncStorage.setItem(
+        "medications",
+        JSON.stringify(updatedMedications)
+      );
+      setMedications(updatedMedications);
+    } catch (error) {
+      console.log("Error saving medications:", error);
+    }
+  };
+
+  const takeMedication = async (medicationId) => {
+    const updatedMedications = medications.map((medication) => {
+      if (medication.id === medicationId) {
+        console.log("medication taken");
+        return { ...medication, taken: true };
+      }
+      return medication;
+    });
+
+    await saveMedications(updatedMedications);
+  };
 
   return (
     <View style={styles.medContainer}>
       <AddMedsButton handleToggleAdd={toggleAddModal} />
-      {isModalActive && (
+
+      {/* to be refactored */}
+      {/* {isModalActive && (
         <EditMedication
           onCancel={toggleModal}
           medInfo={chosenMed}
           onSave={updateMedication}
         />
+      )} */}
+      {isAddModalVisible && (
+        <AddMedicationsModal
+          onClose={toggleAddModal}
+          onAddMedication={handleAddMedication}
+        />
       )}
-      {isAddModalActive && <AddMedications onCancel={toggleAddModal} />}
+
       <FlatList
-        data={medicationsArray}
+        data={medications}
         renderItem={({ item }) => (
           <>
             <Medication
               medInfo={item}
-              handleDelete={deleteMedItem}
-              handleToggle={toggleModal}
+              takeMedication={takeMedication}
+              // handleDelete={deleteMedItem}
+              // handleToggle={toggleModal}
             />
           </>
         )}
         numColumns={2}
         keyExtractor={(item) => item.id}
+        style={styles.flatList}
       />
+      <View>
+        <Button onPress={clearStorage} title="clear async storage" />
+      </View>
     </View>
   );
 }
@@ -63,11 +137,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 50,
   },
-  inputContainer: {
-    backgroundColor: "red",
-  },
   medContainer: {
-    backgroundColor: "yellow",
+    // backgroundColor: "yellow",
     color: "white",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  flatList: {
+    height: 545,
   },
 });

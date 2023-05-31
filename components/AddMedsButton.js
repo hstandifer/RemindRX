@@ -20,17 +20,16 @@ export default function AddMedsButton({ handleToggleAdd }) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    width: "94%",
   },
   item: {
-    margin: 5,
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
-    height: 150,
-    width: 150,
-    backgroundColor: "purple",
+    padding: 10,
+    width: "100%",
+    backgroundColor: "skyblue",
+    marginBottom: 10,
   },
   medText: {
     color: "white",
